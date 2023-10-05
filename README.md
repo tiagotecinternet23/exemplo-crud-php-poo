@@ -14,3 +14,5 @@ Você deve:
 
 - Refatorar todos os arquivos da pasta **produtos** para que passem a utilizar os recursos das classes `Produto` e `Utilitarios`.
 
+- Teste tudo e, **estando tudo OK**, apague todos os arquivos de funções.
+
