@@ -1,34 +1,23 @@
 <?php
-require_once "../src/funcoes-produtos.php";
-require_once "../src/funcoes-fabricantes.php";
-$listaDeFabricantes = lerFabricantes($conexao);
+use ExemploCrudPoo\Fabricante;
+use ExemploCrudPoo\Produto;
+require_once "../vendor/autoload.php";
 
-$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
-$produto = lerUmProduto($conexao, $id);
+$objetoProduto = new Produto;
+$objetoFabricante = new Fabricante;
+
+$listaDeFabricantes = $objetoFabricante->lerFabricantes();
+
+$objetoProduto->setId($_GET["id"]);
+$produto = $objetoProduto->lerUmProduto();
 
 if(isset($_POST['atualizar'])){
-    $nome = filter_input(INPUT_POST, "nome", FILTER_SANITIZE_SPECIAL_CHARS);
-    
-    $preco = filter_input(
-        INPUT_POST, "preco", 
-        FILTER_SANITIZE_NUMBER_FLOAT,
-        FILTER_FLAG_ALLOW_FRACTION
-    );
-
-    $quantidade = filter_input(
-        INPUT_POST, "quantidade", FILTER_SANITIZE_NUMBER_INT
-    );
-
-    $fabricanteId = filter_input(
-        INPUT_POST, "fabricante", FILTER_SANITIZE_NUMBER_INT
-    );
-
-    $descricao = filter_input(INPUT_POST, "descricao", FILTER_SANITIZE_SPECIAL_CHARS);
-
-    atualizarProduto(
-        $conexao, $id, $nome, $preco, $quantidade, $descricao, $fabricanteId
-    );
-
+    $objetoProduto->setNome($_POST['nome']);
+    $objetoProduto->setPreco($_POST['preco']);
+    $objetoProduto->setQuantidade($_POST['quantidade']);
+    $objetoProduto->setFabricanteId($_POST['fabricante']);
+    $objetoProduto->setDescricao($_POST['descricao']);
+    $objetoProduto->atualizarProduto();
     header("location:visualizar.php");
 }
 ?>
