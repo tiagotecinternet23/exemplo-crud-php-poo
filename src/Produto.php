@@ -38,6 +38,26 @@ final class Produto {
     }
 
 
+    public function inserirProduto():void {
+        $sql = "INSERT INTO produtos(
+            nome, preco, quantidade, descricao, fabricante_id
+        ) VALUES(
+            :nome, :preco, :quantidade, :descricao, :fabricanteId
+        )";    
+    
+        try {
+            $consulta = $this->conexao->prepare($sql);
+            $consulta->bindValue(":nome", $this->nome, PDO::PARAM_STR);
+            $consulta->bindValue(":preco", $this->preco, PDO::PARAM_STR);
+            $consulta->bindValue(":quantidade", $this->quantidade, PDO::PARAM_INT);
+            $consulta->bindValue(":descricao", $this->descricao, PDO::PARAM_STR);
+            $consulta->bindValue(":fabricanteId", $this->fabricanteId, PDO::PARAM_INT);
+            $consulta->execute();
+        } catch (Exception $erro) {
+            die("Erro ao inserir: ".$erro->getMessage());
+        }
+    }
+
 
 
 
@@ -75,10 +95,8 @@ final class Produto {
      *
      * @return self
      */
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
+    public function setId(int $id): self  {
+        $this->id = filter_var($id, FILTER_SANITIZE_NUMBER_INT);
         return $this;
     }
 
@@ -99,10 +117,8 @@ final class Produto {
      *
      * @return self
      */
-    public function setNome(string $nome): self
-    {
-        $this->nome = $nome;
-
+    public function setNome(string $nome): self {
+        $this->nome = filter_var($nome, FILTER_SANITIZE_SPECIAL_CHARS);
         return $this;
     }
 
@@ -123,10 +139,8 @@ final class Produto {
      *
      * @return self
      */
-    public function setDescricao(string $descricao): self
-    {
-        $this->descricao = $descricao;
-
+    public function setDescricao(string $descricao): self {
+        $this->descricao = filter_var($descricao, FILTER_SANITIZE_SPECIAL_CHARS);
         return $this;
     }
 
@@ -147,10 +161,9 @@ final class Produto {
      *
      * @return self
      */
-    public function setPreco(float $preco): self
-    {
-        $this->preco = $preco;
-
+    public function setPreco(float $preco): self {
+        $this->preco = filter_var($preco, FILTER_SANITIZE_NUMBER_FLOAT,
+        FILTER_FLAG_ALLOW_FRACTION);
         return $this;
     }
 
@@ -171,10 +184,8 @@ final class Produto {
      *
      * @return self
      */
-    public function setQuantidade(int $quantidade): self
-    {
-        $this->quantidade = $quantidade;
-
+    public function setQuantidade(int $quantidade): self {
+        $this->quantidade = filter_var($quantidade, FILTER_SANITIZE_NUMBER_INT);
         return $this;
     }
 
@@ -195,10 +206,8 @@ final class Produto {
      *
      * @return self
      */
-    public function setFabricanteId(int $fabricanteId): self
-    {
-        $this->fabricanteId = $fabricanteId;
-
+    public function setFabricanteId(int $fabricanteId): self {
+        $this->fabricanteId = filter_var($fabricanteId, FILTER_SANITIZE_NUMBER_INT);
         return $this;
     }
 }
